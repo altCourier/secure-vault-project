@@ -1,0 +1,127 @@
+/* ---- BASE ---- */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-base);
+  color: var(--text-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* =============================================
+   TYPOGRAPHY SCALE
+   ============================================= */
+
+
+h1 {
+  font-family: var(--font-sans);
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+h2 {
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+}
+
+h3 {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+}
+
+p {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-body);
+  line-height: 1.7;
+}
+
+/* ---- COLOR TOKENS ---- */
+/* Dark mode is the default. Light mode overrides below. */
+:root {
+  /* Backgrounds */
+  --bg-base:        #0d0f14;   /* page background */
+  --bg-surface:     #111318;   /* cards, topbar, panels */
+  --bg-hover:       #13161f;   /* table row hover, subtle hover */
+  --bg-input:       #1a1d26;   /* inputs, pills */
+ 
+  /* Borders */
+  --border-subtle:  #1f2330;   /* table rows, card edges */
+  --border-mid:     #2a2d38;   /* topbar, stronger dividers */
+  --border-strong:  #374151;   /* buttons, interactive borders */
+ 
+  /* Text */
+  --text-primary:   #f0f4ff;   /* headings, logo, important values */
+  --text-body:      #e2e8f0;   /* default body text */
+  --text-muted:     #94a3b8;   /* secondary labels, metadata */
+  --text-faint:     #4b5563;   /* timestamps, hints, placeholders */
+  --text-disabled:  #374151;   /* disabled states, stat meta */
+ 
+  /* Semantic colors */
+  --color-green:    #34d399;
+  --color-green-bg: #052e1a;
+  --color-red:      #f87171;
+  --color-red-bg:   #2d0f0f;
+  --color-blue:     #60a5fa;
+  --color-blue-bg:  #0c1a3a;
+  --color-amber:    #fbbf24;
+  --color-amber-bg: #1f1505;
+ 
+  /* Accent (brand blue) */
+  --accent:         #2563eb;
+ 
+  /* Radius */
+  --radius-sm:      6px;
+  --radius-md:      10px;
+  --radius-lg:      14px;
+  --radius-pill:    999px;
+ 
+  /* Fonts */
+  --font-sans: 'Sora', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+ 
+  /* Transitions */
+  --transition: 0.15s ease;
+}
+ 
+/* ---- LIGHT MODE OVERRIDES ---- */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-base:        #f4f5f7;
+    --bg-surface:     #ffffff;
+    --bg-hover:       #f0f2f5;
+    --bg-input:       #f4f5f7;
+ 
+    --border-subtle:  #e5e7eb;
+    --border-mid:     #d1d5db;
+    --border-strong:  #9ca3af;
+ 
+    --text-primary:   #0d0f14;
+    --text-body:      #1f2330;
+    --text-muted:     #4b5563;
+    --text-faint:     #9ca3af;
+    --text-disabled:  #d1d5db;
+ 
+    --color-green:    #059669;
+    --color-green-bg: #d1fae5;
+    --color-red:      #dc2626;
+    --color-red-bg:   #fee2e2;
+    --color-blue:     #2563eb;
+    --color-blue-bg:  #dbeafe;
+    --color-amber:    #d97706;
+    --color-amber-bg: #fef3c7;
+  }
+}
