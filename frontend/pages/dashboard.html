@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+  <head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Dashboard | Secure Vault</title>
+
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/dashboard.css" />
+
+  </head>
+
+  <body>
+    <div class="app-layout">
+  
+      <!-- ════════════════════════════════
+          HEADER
+          Populated by: dashboard.js → renderUserInfo()
+          Data source:  GET /api/session
+      ════════════════════════════════ -->
+      <header class="app-header">
+        <div class="header-brand">
+          <span class="brand-name">Secure Vault</span>
+        </div>
+  
+        <div class="header-user">
+          <div class="user-info">
+            <!-- Filled by renderUserInfo(session) -->
+            <div class="name" id="header-username" aria-label="Logged in user">—</div>
+            <div class="role">Authenticated session</div>
+          </div>
+          <!-- Initials avatar, filled by renderUserInfo(session) -->
+          <div class="avatar" id="header-avatar" aria-hidden="true">—</div>
+          <button class="btn-logout" id="btn-logout" type="button">Logout</button>
+        </div>
+      </header>
+  
+      <!-- ════════════════════════════════
+          MAIN CONTENT
+      ════════════════════════════════ -->
+      <main class="app-main">
+  
+        <!-- Page Title -->
+        <div class="page-header">
+          <h1>Security Dashboard</h1>
+          <p>Monitor your account activity and recent security events.</p>
+        </div>
+  
+        <!-- ── Session Status Bar ──────────────────────────────
+            Populated by: dashboard.js → renderUserInfo()
+            Data source:  GET /api/session  (field: ip)
+        ─────────────────────────────────────────────────────── -->
+        <div class="session-bar" role="status" aria-live="polite">
+          <div class="session-indicator">
+            <div class="pulse-dot" aria-hidden="true"></div>
+            <span>Active session</span>
+          </div>
+          <!-- Filled by renderUserInfo(session) -->
+          <span class="session-meta" id="session-ip">IP: —</span>
+        </div>
+  
+        <!-- ── Stats Grid ──────────────────────────────────────
+            Populated by: dashboard.js → renderStats(events)
+            Data source:  GET /api/audit-log  (derived counts)
+        ─────────────────────────────────────────────────────── -->
+        <div class="stats-grid" aria-label="Account statistics">
+          <div class="stat-card accent-blue">
+            <div class="stat-label">Total Events</div>
+            <div class="stat-value" id="stat-total" aria-live="polite">—</div>
+          </div>
+          <div class="stat-card accent-green">
+            <div class="stat-label">Successful</div>
+            <div class="stat-value" id="stat-success" aria-live="polite">—</div>
+          </div>
+          <div class="stat-card accent-red">
+            <div class="stat-label">Failed</div>
+            <div class="stat-value" id="stat-failed" aria-live="polite">—</div>
+          </div>
+          <div class="stat-card accent-amber">
+            <div class="stat-label">Last Login</div>
+            <!-- Font size override via class to handle longer relative strings -->
+            <div class="stat-value stat-value--sm" id="stat-last" aria-live="polite">—</div>
+          </div>
+        </div>
+  
+        <!-- ── Audit Log ───────────────────────────────────────
+            Populated by: dashboard.js → renderTable(events)
+            Data source:  GET /api/audit-log
+            Expected shape: { events: AuditEvent[] }
+            AuditEvent fields:
+              - timestamp   : ISO 8601 string
+              - event_type  : string  (see EVENT_TYPE_LABELS in dashboard.js)
+              - ip_address  : string
+              - user_agent  : string  (raw UA — parsed in dashboard.js)
+              - status      : "success" | "failed" | "pending"
+        ─────────────────────────────────────────────────────── -->
+        <section class="section-card" aria-labelledby="audit-title">
+          <div class="section-header">
+            <div>
+              <h2 id="audit-title">Security Audit History</h2>
+              <p>All login attempts and security events for your account.</p>
+            </div>
+  
+            <!-- Filter buttons — wired in dashboard.js → initFilters() -->
+            <div class="filter-bar" role="group" aria-label="Filter events by status">
+              <button class="filter-btn active" data-filter="all"     type="button">All</button>
+              <button class="filter-btn"        data-filter="success" type="button">Success</button>
+              <button class="filter-btn"        data-filter="failed"  type="button">Failed</button>
+            </div>
+          </div>
+  
+          <div class="table-wrapper" role="region" aria-label="Audit log table" tabindex="0">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Timestamp</th>
+                  <th scope="col">Event</th>
+                  <th scope="col">IP Address</th>
+                  <th scope="col">User Agent</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <!-- Filled by renderTable(events) in dashboard.js -->
+              <tbody id="audit-table-body">
+                <tr>
+                  <td colspan="5" class="table-loading">Loading audit log…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+  
+      </main>
+    </div>
+  
+    <!-- Dashboard logic — loaded last so DOM is ready -->
+    <script src="../js/dashboard.js"></script>
+  </body>
+</html>
