@@ -1,5 +1,153 @@
-/* ---- BASE ---- */
-html { font-size: 16px; }
+/* =============================================
+   DESIGN TOKENS  —  theme.css
+   Dark is the default. Light overrides via:
+     1. Manual toggle  →  html[data-theme="light"]
+     2. OS preference  →  @media (prefers-color-scheme: light)
+   ============================================= */
+
+/* ---- FONTS (import before everything) ---- */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+/* ---- DARK TOKENS (default) ---- */
+:root {
+  /* Backgrounds */
+  --bg-base:        #0d0f14;
+  --bg-surface:     #111318;
+  --bg-hover:       #13161f;
+  --bg-input:       #1a1d26;
+
+  /* Borders */
+  --border-subtle:  #1f2330;
+  --border-mid:     #2a2d38;
+  --border-strong:  #374151;
+
+  /* Text */
+  --text-primary:   #f0f4ff;
+  --text-body:      #e2e8f0;
+  --text-muted:     #94a3b8;
+  --text-faint:     #4b5563;
+  --text-disabled:  #374151;
+
+  /* Semantic colors */
+  --color-green:    #34d399;
+  --color-green-bg: #052e1a;
+  --color-red:      #f87171;
+  --color-red-bg:   #2d0f0f;
+  --color-blue:     #60a5fa;
+  --color-blue-bg:  #0c1a3a;
+  --color-amber:    #fbbf24;
+  --color-amber-bg: #1f1505;
+
+  /* Accent */
+  --accent:         #2563eb;
+
+  /* Shape */
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  14px;
+  --radius-pill: 999px;
+
+  /* Fonts */
+  --font-sans: 'Sora', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  /* Transitions */
+  --transition: 0.15s ease;
+
+  /* Toggle button icon (moon = dark mode active) */
+  --toggle-icon: "🌙";
+}
+
+/* ---- LIGHT TOKENS — manual toggle ---- */
+html[data-theme="light"] {
+  --bg-base:        #f4f5f7;
+  --bg-surface:     #ffffff;
+  --bg-hover:       #f0f2f5;
+  --bg-input:       #f4f5f7;
+
+  --border-subtle:  #e5e7eb;
+  --border-mid:     #d1d5db;
+  --border-strong:  #9ca3af;
+
+  --text-primary:   #0d0f14;
+  --text-body:      #1f2330;
+  --text-muted:     #4b5563;
+  --text-faint:     #9ca3af;
+  --text-disabled:  #d1d5db;
+
+  --color-green:    #059669;
+  --color-green-bg: #d1fae5;
+  --color-red:      #dc2626;
+  --color-red-bg:   #fee2e2;
+  --color-blue:     #2563eb;
+  --color-blue-bg:  #dbeafe;
+  --color-amber:    #d97706;
+  --color-amber-bg: #fef3c7;
+
+  --toggle-icon: "☀️";
+}
+
+/* ---- LIGHT TOKENS — OS preference (no manual override) ---- */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg-base:        #f4f5f7;
+    --bg-surface:     #ffffff;
+    --bg-hover:       #f0f2f5;
+    --bg-input:       #f4f5f7;
+
+    --border-subtle:  #e5e7eb;
+    --border-mid:     #d1d5db;
+    --border-strong:  #9ca3af;
+
+    --text-primary:   #0d0f14;
+    --text-body:      #1f2330;
+    --text-muted:     #4b5563;
+    --text-faint:     #9ca3af;
+    --text-disabled:  #d1d5db;
+
+    --color-green:    #059669;
+    --color-green-bg: #d1fae5;
+    --color-red:      #dc2626;
+    --color-red-bg:   #fee2e2;
+    --color-blue:     #2563eb;
+    --color-blue-bg:  #dbeafe;
+    --color-amber:    #d97706;
+    --color-amber-bg: #fef3c7;
+
+    --toggle-icon: "☀️";
+  }
+}
+
+/* ---- SMOOTH THEME TRANSITION ---- */
+/* Applied after first paint so the initial load has no flash */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition:
+    background-color var(--transition),
+    border-color     var(--transition),
+    color            var(--transition),
+    fill             var(--transition),
+    stroke           var(--transition) !important;
+}
+
+
+/* =============================================
+   BASE
+   ============================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+}
 
 body {
   font-family: var(--font-sans);
@@ -10,10 +158,10 @@ body {
   min-height: 100vh;
 }
 
+
 /* =============================================
    TYPOGRAPHY SCALE
    ============================================= */
-
 
 h1 {
   font-family: var(--font-sans);
@@ -49,79 +197,57 @@ p {
   line-height: 1.7;
 }
 
-/* ---- COLOR TOKENS ---- */
-/* Dark mode is the default. Light mode overrides below. */
-:root {
-  /* Backgrounds */
-  --bg-base:        #0d0f14;   /* page background */
-  --bg-surface:     #111318;   /* cards, topbar, panels */
-  --bg-hover:       #13161f;   /* table row hover, subtle hover */
-  --bg-input:       #1a1d26;   /* inputs, pills */
- 
-  /* Borders */
-  --border-subtle:  #1f2330;   /* table rows, card edges */
-  --border-mid:     #2a2d38;   /* topbar, stronger dividers */
-  --border-strong:  #374151;   /* buttons, interactive borders */
- 
-  /* Text */
-  --text-primary:   #f0f4ff;   /* headings, logo, important values */
-  --text-body:      #e2e8f0;   /* default body text */
-  --text-muted:     #94a3b8;   /* secondary labels, metadata */
-  --text-faint:     #4b5563;   /* timestamps, hints, placeholders */
-  --text-disabled:  #374151;   /* disabled states, stat meta */
- 
-  /* Semantic colors */
-  --color-green:    #34d399;
-  --color-green-bg: #052e1a;
-  --color-red:      #f87171;
-  --color-red-bg:   #2d0f0f;
-  --color-blue:     #60a5fa;
-  --color-blue-bg:  #0c1a3a;
-  --color-amber:    #fbbf24;
-  --color-amber-bg: #1f1505;
- 
-  /* Accent (brand blue) */
-  --accent:         #2563eb;
- 
-  /* Radius */
-  --radius-sm:      6px;
-  --radius-md:      10px;
-  --radius-lg:      14px;
-  --radius-pill:    999px;
- 
-  /* Fonts */
-  --font-sans: 'Sora', sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
- 
-  /* Transitions */
-  --transition: 0.15s ease;
+
+/* =============================================
+   THEME TOGGLE BUTTON
+   Placed in .app-header by dashboard.js
+   ============================================= */
+
+.btn-theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-mid);
+  background: var(--bg-input);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
- 
-/* ---- LIGHT MODE OVERRIDES ---- */
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg-base:        #f4f5f7;
-    --bg-surface:     #ffffff;
-    --bg-hover:       #f0f2f5;
-    --bg-input:       #f4f5f7;
- 
-    --border-subtle:  #e5e7eb;
-    --border-mid:     #d1d5db;
-    --border-strong:  #9ca3af;
- 
-    --text-primary:   #0d0f14;
-    --text-body:      #1f2330;
-    --text-muted:     #4b5563;
-    --text-faint:     #9ca3af;
-    --text-disabled:  #d1d5db;
- 
-    --color-green:    #059669;
-    --color-green-bg: #d1fae5;
-    --color-red:      #dc2626;
-    --color-red-bg:   #fee2e2;
-    --color-blue:     #2563eb;
-    --color-blue-bg:  #dbeafe;
-    --color-amber:    #d97706;
-    --color-amber-bg: #fef3c7;
+
+.btn-theme-toggle:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.btn-theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* The emoji icon inside the button */
+.btn-theme-toggle .toggle-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* Label text — hidden on very small screens */
+.btn-theme-toggle .toggle-label {
+  display: inline;
+}
+
+@media (max-width: 480px) {
+  .btn-theme-toggle .toggle-label {
+    display: none;
   }
 }

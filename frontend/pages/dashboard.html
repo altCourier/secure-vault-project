@@ -1,55 +1,63 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
   <head>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <title>Dashboard | Secure Vault</title>
 
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/dashboard.css" />
 
+    <!--
+      theme-toggle.js is loaded with `defer` so it runs after the HTML is parsed
+      but before dashboard.js — theme is applied before content renders.
+    -->
+    <script src="../js/theme-toggle.js" defer></script>
+
   </head>
 
   <body>
     <div class="app-layout">
-  
+
       <!-- ════════════════════════════════
           HEADER
           Populated by: dashboard.js → renderUserInfo()
           Data source:  GET /api/session
+          Note: The theme-toggle button is injected into
+                .header-user by theme-toggle.js at runtime.
       ════════════════════════════════ -->
       <header class="app-header">
         <div class="header-brand">
           <span class="brand-name">Secure Vault</span>
         </div>
-  
+
         <div class="header-user">
           <div class="user-info">
             <!-- Filled by renderUserInfo(session) -->
             <div class="name" id="header-username" aria-label="Logged in user">—</div>
             <div class="role">Authenticated session</div>
           </div>
+          <!-- theme-toggle.js injects .btn-theme-toggle here (before .avatar) -->
           <!-- Initials avatar, filled by renderUserInfo(session) -->
           <div class="avatar" id="header-avatar" aria-hidden="true">—</div>
           <button class="btn-logout" id="btn-logout" type="button">Logout</button>
         </div>
       </header>
-  
+
       <!-- ════════════════════════════════
           MAIN CONTENT
       ════════════════════════════════ -->
       <main class="app-main">
-  
+
         <!-- Page Title -->
         <div class="page-header">
           <h1>Security Dashboard</h1>
           <p>Monitor your account activity and recent security events.</p>
         </div>
-  
+
         <!-- ── Session Status Bar ──────────────────────────────
             Populated by: dashboard.js → renderUserInfo()
             Data source:  GET /api/session  (field: ip)
@@ -62,7 +70,7 @@
           <!-- Filled by renderUserInfo(session) -->
           <span class="session-meta" id="session-ip">IP: —</span>
         </div>
-  
+
         <!-- ── Stats Grid ──────────────────────────────────────
             Populated by: dashboard.js → renderStats(events)
             Data source:  GET /api/audit-log  (derived counts)
@@ -82,11 +90,10 @@
           </div>
           <div class="stat-card accent-amber">
             <div class="stat-label">Last Login</div>
-            <!-- Font size override via class to handle longer relative strings -->
             <div class="stat-value stat-value--sm" id="stat-last" aria-live="polite">—</div>
           </div>
         </div>
-  
+
         <!-- ── Audit Log ───────────────────────────────────────
             Populated by: dashboard.js → renderTable(events)
             Data source:  GET /api/audit-log
@@ -104,7 +111,7 @@
               <h2 id="audit-title">Security Audit History</h2>
               <p>All login attempts and security events for your account.</p>
             </div>
-  
+
             <!-- Filter buttons — wired in dashboard.js → initFilters() -->
             <div class="filter-bar" role="group" aria-label="Filter events by status">
               <button class="filter-btn active" data-filter="all"     type="button">All</button>
@@ -112,7 +119,7 @@
               <button class="filter-btn"        data-filter="failed"  type="button">Failed</button>
             </div>
           </div>
-  
+
           <div class="table-wrapper" role="region" aria-label="Audit log table" tabindex="0">
             <table>
               <thead>
@@ -133,11 +140,11 @@
             </table>
           </div>
         </section>
-  
+
       </main>
     </div>
-  
+
     <!-- Dashboard logic — loaded last so DOM is ready -->
-    <script src="../js/dashboard.js"></script>
+    <script src="../js/dashboard.js" defer></script>
   </body>
 </html>
