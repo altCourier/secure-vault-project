@@ -9,6 +9,8 @@ The logic of this file should:
 
 */
 
+const pool = require('./db');
+
 // req  := the incoming requests
 // res  := the outgoing requests
 // next := function to call the next middleware/route
@@ -17,6 +19,19 @@ const session_middleware = async (req, res, next) => {
     try {
 
         if (req.session.user_id) {
+
+            const result = await pool.query(
+                'SELECT * FROM User_Session WHERE user_id = ? AND expires_at > NOW() AND is_mfa_verified = TRUE',
+                [req.session.user_id]
+            );
+
+            const rows = result[0];
+
+            if (rows.length === 0) {
+                return res.status(401).json( {error: 'Session not found'} );
+            }
+
+            next();
 
 
 
