@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS Audit_Log (
     timestamp DATETIME NOT NULL DEFAULT NOW(), 
     details TEXT NULL,
 
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 
 );
 
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS User_Session (
     expires_at DATETIME NOT NULL,
     last_activity DATETIME NULL,
 
-    FOREIGN KEY (user id) REFERENCES Users(user_id)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
 -- Security State Table
@@ -35,5 +35,5 @@ CREATE TABLE IF NOT EXISTS Security_State (
     lockout_until DATETIME NULL,
     is_account_frozen BOOLEAN NOT NULL DEFAULT FALSE,
 
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
