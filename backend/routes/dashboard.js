@@ -84,7 +84,7 @@ router.get('/audit-log', session_middleware, async(req, res) => {
             [req.session.user_id]
         );
         
-        return res.status(200).json(rows);
+        return res.status(200).json({ events: rows });
 
     }
     catch (error) {
