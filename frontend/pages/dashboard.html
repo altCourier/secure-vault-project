@@ -11,12 +11,6 @@
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/dashboard.css" />
 
-    <!--
-      theme-toggle.js is loaded with `defer` so it runs after the HTML is parsed
-      but before dashboard.js — theme is applied before content renders.
-    -->
-    <script src="../js/theme-toggle.js" defer></script>
-
   </head>
 
   <body>
@@ -26,8 +20,6 @@
           HEADER
           Populated by: dashboard.js → renderUserInfo()
           Data source:  GET /api/session
-          Note: The theme-toggle button is injected into
-                .header-user by theme-toggle.js at runtime.
       ════════════════════════════════ -->
       <header class="app-header">
         <div class="header-brand">
@@ -40,7 +32,6 @@
             <div class="name" id="header-username" aria-label="Logged in user">—</div>
             <div class="role">Authenticated session</div>
           </div>
-          <!-- theme-toggle.js injects .btn-theme-toggle here (before .avatar) -->
           <!-- Initials avatar, filled by renderUserInfo(session) -->
           <div class="avatar" id="header-avatar" aria-hidden="true">—</div>
           <button class="btn-logout" id="btn-logout" type="button">Logout</button>

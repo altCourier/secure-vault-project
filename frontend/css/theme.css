@@ -1,80 +1,27 @@
 /* =============================================
    DESIGN TOKENS  —  theme.css
-   Dark is the default. Light overrides via:
-     1. Manual toggle  →  html[data-theme="light"]
-     2. OS preference  →  @media (prefers-color-scheme: light)
    ============================================= */
 
-/* ---- FONTS (import before everything) ---- */
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
-
-/* ---- DARK TOKENS (default) ---- */
 :root {
   /* Backgrounds */
-  --bg-base:        #0d0f14;
-  --bg-surface:     #111318;
-  --bg-hover:       #13161f;
-  --bg-input:       #1a1d26;
+  --bg-base:       #f4f5f7;
+  --bg-surface:    #ffffff;
+  --bg-hover:      #f0f2f5;
+  --bg-input:      #f4f5f7;
 
   /* Borders */
-  --border-subtle:  #1f2330;
-  --border-mid:     #2a2d38;
-  --border-strong:  #374151;
+  --border-subtle: #e5e7eb;
+  --border-mid:    #d1d5db;
+  --border-strong: #9ca3af;
 
   /* Text */
-  --text-primary:   #f0f4ff;
-  --text-body:      #e2e8f0;
-  --text-muted:     #94a3b8;
-  --text-faint:     #4b5563;
-  --text-disabled:  #374151;
+  --text-primary:  #0d0f14;
+  --text-body:     #1f2330;
+  --text-muted:    #4b5563;
+  --text-faint:    #9ca3af;
+  --text-disabled: #d1d5db;
 
   /* Semantic colors */
-  --color-green:    #34d399;
-  --color-green-bg: #052e1a;
-  --color-red:      #f87171;
-  --color-red-bg:   #2d0f0f;
-  --color-blue:     #60a5fa;
-  --color-blue-bg:  #0c1a3a;
-  --color-amber:    #fbbf24;
-  --color-amber-bg: #1f1505;
-
-  /* Accent */
-  --accent:         #2563eb;
-
-  /* Shape */
-  --radius-sm:  6px;
-  --radius-md:  10px;
-  --radius-lg:  14px;
-  --radius-pill: 999px;
-
-  /* Fonts */
-  --font-sans: 'Sora', sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
-
-  /* Transitions */
-  --transition: 0.15s ease;
-
-  /* Toggle button icon (moon = dark mode active) */
-  --toggle-icon: "🌙";
-}
-
-/* ---- LIGHT TOKENS — manual toggle ---- */
-html[data-theme="light"] {
-  --bg-base:        #f4f5f7;
-  --bg-surface:     #ffffff;
-  --bg-hover:       #f0f2f5;
-  --bg-input:       #f4f5f7;
-
-  --border-subtle:  #e5e7eb;
-  --border-mid:     #d1d5db;
-  --border-strong:  #9ca3af;
-
-  --text-primary:   #0d0f14;
-  --text-body:      #1f2330;
-  --text-muted:     #4b5563;
-  --text-faint:     #9ca3af;
-  --text-disabled:  #d1d5db;
-
   --color-green:    #059669;
   --color-green-bg: #d1fae5;
   --color-red:      #dc2626;
@@ -84,52 +31,21 @@ html[data-theme="light"] {
   --color-amber:    #d97706;
   --color-amber-bg: #fef3c7;
 
-  --toggle-icon: "☀️";
-}
+  /* Accent */
+  --accent: #2563eb;
 
-/* ---- LIGHT TOKENS — OS preference (no manual override) ---- */
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    --bg-base:        #f4f5f7;
-    --bg-surface:     #ffffff;
-    --bg-hover:       #f0f2f5;
-    --bg-input:       #f4f5f7;
+  /* Shape */
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-pill: 999px;
 
-    --border-subtle:  #e5e7eb;
-    --border-mid:     #d1d5db;
-    --border-strong:  #9ca3af;
+  /* Fonts */
+  --font-sans: Arial, sans-serif;
+  --font-mono: 'Courier New', monospace;
 
-    --text-primary:   #0d0f14;
-    --text-body:      #1f2330;
-    --text-muted:     #4b5563;
-    --text-faint:     #9ca3af;
-    --text-disabled:  #d1d5db;
-
-    --color-green:    #059669;
-    --color-green-bg: #d1fae5;
-    --color-red:      #dc2626;
-    --color-red-bg:   #fee2e2;
-    --color-blue:     #2563eb;
-    --color-blue-bg:  #dbeafe;
-    --color-amber:    #d97706;
-    --color-amber-bg: #fef3c7;
-
-    --toggle-icon: "☀️";
-  }
-}
-
-/* ---- SMOOTH THEME TRANSITION ---- */
-/* Applied after first paint so the initial load has no flash */
-html.theme-transition,
-html.theme-transition *,
-html.theme-transition *::before,
-html.theme-transition *::after {
-  transition:
-    background-color var(--transition),
-    border-color     var(--transition),
-    color            var(--transition),
-    fill             var(--transition),
-    stroke           var(--transition) !important;
+  /* Transitions */
+  --transition: 0.15s ease;
 }
 
 
@@ -154,100 +70,121 @@ body {
   background: var(--bg-base);
   color: var(--text-body);
   line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
   min-height: 100vh;
 }
 
 
 /* =============================================
-   TYPOGRAPHY SCALE
+   TYPOGRAPHY
    ============================================= */
 
 h1 {
-  font-family: var(--font-sans);
-  font-size: 2rem;
-  font-weight: 600;
+  font-size: 1.75rem;
+  font-weight: 700;
   color: var(--text-primary);
-  letter-spacing: -0.02em;
   line-height: 1.2;
 }
 
 h2 {
-  font-family: var(--font-sans);
-  font-size: 1.5rem;
-  font-weight: 500;
+  font-size: 1.25rem;
+  font-weight: 600;
   color: var(--text-primary);
-  letter-spacing: -0.01em;
   line-height: 1.4;
 }
 
 h3 {
-  font-family: var(--font-sans);
-  font-size: 1.125rem;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
   color: var(--text-muted);
-  letter-spacing: 0.01em;
   line-height: 1.4;
 }
 
 p {
   font-size: 1rem;
-  font-weight: 400;
   color: var(--text-body);
   line-height: 1.7;
 }
 
 
 /* =============================================
-   THEME TOGGLE BUTTON
-   Placed in .app-header by dashboard.js
+   AUTH FORM
    ============================================= */
 
-.btn-theme-toggle {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 500;
-  padding: 6px 12px;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--border-mid);
+.auth-form {
+  background: var(--bg-surface);
+  width: 350px;
+  padding: 30px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.auth-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
   background: var(--bg-input);
-  color: var(--text-muted);
+  color: var(--text-body);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  transition: border-color var(--transition);
+}
+
+.auth-form input::placeholder {
+  color: var(--text-faint);
+}
+
+.auth-form input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.auth-form button {
+  width: 100%;
+  padding: 12px;
+  background: var(--accent);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition:
-    background var(--transition),
-    border-color var(--transition),
-    color var(--transition);
-  white-space: nowrap;
-  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background var(--transition);
 }
 
-.btn-theme-toggle:hover {
-  background: var(--bg-hover);
-  border-color: var(--border-strong);
-  color: var(--text-primary);
+.auth-form button:hover {
+  background: #1d4ed8;
 }
 
-.btn-theme-toggle:focus-visible {
+.auth-form button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
-/* The emoji icon inside the button */
-.btn-theme-toggle .toggle-icon {
-  font-size: 14px;
-  line-height: 1;
+.auth-form p {
+  text-align: center;
+  margin-top: 15px;
+  color: var(--text-muted);
 }
 
-/* Label text — hidden on very small screens */
-.btn-theme-toggle .toggle-label {
-  display: inline;
+.auth-form a {
+  color: var(--color-blue);
+  text-decoration: none;
 }
 
-@media (max-width: 480px) {
-  .btn-theme-toggle .toggle-label {
-    display: none;
-  }
+.auth-form a:hover {
+  text-decoration: underline;
+}
+
+.message {
+  font-weight: bold;
+  color: var(--text-primary);
 }
