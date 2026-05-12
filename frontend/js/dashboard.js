@@ -345,7 +345,7 @@
       tbody.innerHTML = `
         <tr>
           <td colspan="5" class="table-error">
-            ⚠ ${escapeHTML(message)}
+            ${escapeHTML(message)}
           </td>
         </tr>`;
     }
