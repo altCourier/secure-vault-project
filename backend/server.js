@@ -149,6 +149,8 @@ app.post("/login", async (req, res) => {
   }
 });
 
+const BACKEND_URL = process.env.BACKEND_URL || `http://localhost:${PORT}`;
+
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on ${BACKEND_URL}`);
 });
