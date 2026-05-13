@@ -34,7 +34,7 @@
     msgEl.textContent     = "";
 
     try {
-      const response = await fetch(`${API_BASE}/setup-mfa`, {
+      const response = await fetch(`${API_BASE}/verify-mfa`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

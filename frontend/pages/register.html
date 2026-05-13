@@ -21,7 +21,7 @@
     <p class="message" id="message"></p>
   </form>
 
-  <script>
+  <script src="../js/config.js">
     document.getElementById("registerForm").addEventListener("submit", async function (event) {
       event.preventDefault();
 
@@ -33,7 +33,7 @@
         password: document.getElementById("password").value,
       };
 
-      const response = await fetch("/register", {
+      const response = await fetch(`${API_BASE}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
