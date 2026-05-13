@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recovery Code</title>
+  <link rel="stylesheet" href="../css/login_register.css" />
+  <style>
+    .recovery-input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-family: monospace;
+      font-size: 18px;
+      text-align: center;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .recovery-input:focus {
+      outline: none;
+      border-color: #1d4ed8;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 14px;
+      font-size: 13px;
+      color: #888;
+    }
+
+    .back-link a {
+      color: #1d4ed8;
+      text-decoration: none;
+    }
+
+    .info-box {
+      background: #fefce8;
+      border: 1px solid #fde047;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #854d0e;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-form">
+    <h2>🛟 Use Recovery Code</h2>
+
+    <p style="text-align:center; font-size:14px; color:#555; margin-bottom:12px;">
+      Enter one of your saved recovery codes to access your account.
+    </p>
+
+    <div class="info-box">
+      ⚠ Each recovery code can only be used once.
+    </div>
+
+    <input
+      type="text"
+      id="recovery-code"
+      class="recovery-input"
+      maxlength="8"
+      placeholder="XXXXXXXX"
+      autocomplete="off"
+      spellcheck="false"
+    />
+
+    <button type="button" id="btn-submit">Verify Recovery Code</button>
+
+    <p class="message" id="message"></p>
+
+    <span class="back-link">
+      Have your authenticator? <a href="verify-mfa.html">Enter 6-digit code instead</a>
+    </span>
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/verify-recovery.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Set Up Authenticator</title>
+  <link rel="stylesheet" href="../css/login_register.css" />
+  <style>
+    .qr-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 16px 0;
+      gap: 12px;
+    }
+
+    .qr-box img {
+      width: 180px;
+      height: 180px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .qr-box .qr-placeholder {
+      width: 180px;
+      height: 180px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 13px;
+    }
+
+    .manual-code {
+      width: 100%;
+      background: #f0f4ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: monospace;
+      font-size: 13px;
+      color: #1d4ed8;
+      word-break: break-all;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #888;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #e5e7eb;
+      margin: 16px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-form">
+    <h2>🔐 Set Up Authenticator</h2>
+
+    <p style="text-align:center; font-size:14px; color:#555; margin-bottom:8px;">
+      Scan the QR code below with Google Authenticator or Authy.
+    </p>
+
+    <!-- QR Code area -->
+    <div class="qr-box">
+      <div class="qr-placeholder" id="qr-placeholder">Loading...</div>
+      <img id="qr-image" src="" alt="QR Code" style="display:none;" />
+    </div>
+
+    <!-- Manual entry -->
+    <p class="hint">Can't scan? Enter this key manually:</p>
+    <div class="manual-code" id="secret-key">—</div>
+
+    <hr class="divider" />
+
+    <button type="button" id="btn-continue">Continue →</button>
+
+    <p class="message" id="message"></p>
+  </div>
+  <script src="../js/config.js"></script>
+  <script src="../js/setup-mfa.js" defer></script>
+</body>
+</html>
