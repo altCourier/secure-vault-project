@@ -17,7 +17,7 @@
     const secretKeyEl    = document.getElementById("secret-key");
 
     try {
-      const response = await fetch("http://localhost:3000/setup-mfa", {
+      const response = await fetch(`${API_BASE}/setup-mfa`, {
         method: "POST",
         credentials: "include",               // sends session cookie
         headers: { "Content-Type": "application/json" },
