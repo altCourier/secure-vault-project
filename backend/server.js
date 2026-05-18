@@ -1,11 +1,19 @@
 // Developer 1: Front Door (Registration & Login)
 // Backend API using Node.js, Express, MySQL, and bcrypt
+// Developer 1: Front Door (Registration & Login)
+// Backend API using Node.js, Express, MySQL, bcrypt, sessions, and routes
 
 const express = require("express");
 const mysql = require("mysql2/promise");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
+const session = require("express-session");
 require("dotenv").config();
+
+const setupMfaRoutes = require("./routes/setup_mfa");
+const verifyMfaRoutes = require("./routes/verify_mfa");
+const verifyRecoveryRoutes = require("./routes/verfiy_recovery");
+const dashboardRoutes = require("./routes/dashboard");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,6 +37,18 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || "secure-vault-secret",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false,
+    httpOnly: true
+  }
+}));
+
 app.use(express.static("../frontend"));
 
 const pool = mysql.createPool({
@@ -103,7 +123,9 @@ app.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
-      return res.status(400).json({ message: "Username and password are required." });
+      return res.status(400).json({
+        message: "Username and password are required."
+      });
     }
 
     const [rows] = await pool.query(
@@ -120,37 +142,59 @@ app.post("/login", async (req, res) => {
     );
 
     if (rows.length === 0) {
-      return res.status(401).json({ message: "Invalid username or password." });
+      return res.status(401).json({
+        message: "Invalid username or password."
+      });
     }
 
     const user = rows[0];
 
     if (user.account_status === "locked") {
-      return res.status(403).json({ message: "Account is locked." });
+      return res.status(403).json({
+        message: "Account is locked."
+      });
     }
 
     if (user.lock_until && new Date(user.lock_until) > new Date()) {
-      return res.status(403).json({ message: "Account is temporarily locked." });
+      return res.status(403).json({
+        message: "Account is temporarily locked."
+      });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
 
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid username or password." });
+      return res.status(401).json({
+        message: "Invalid username or password."
+      });
     }
+
+    req.session.userId = user.user_id;
+    req.session.username = user.username;
 
     return res.status(200).json({
       message: "Password verified. Continue to MFA setup or verification.",
       userId: user.user_id,
+      username: user.username
     });
   } catch (error) {
     console.error("Login error:", error);
-    return res.status(500).json({ message: "Server error." });
+    return res.status(500).json({
+      message: "Server error."
+    });
   }
 });
+
+// ROUTES FROM SEPARATE FILES
+app.use(setupMfaRoutes);
+app.use(verifyMfaRoutes);
+app.use(verifyRecoveryRoutes);
+app.use(dashboardRoutes);
 
 const BACKEND_URL = process.env.BACKEND_URL || `http://localhost:${PORT}`;
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${BACKEND_URL}`);
 });
+
+
