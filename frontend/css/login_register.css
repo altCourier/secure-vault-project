@@ -45,6 +45,24 @@ body {
   background: #1e40af;
 }
 
+.back-button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: #f2f2f2;
+  color: #333;
+  border-radius: 8px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.back-button:hover {
+  background: #e0e0e0;
+}
+
 .auth-form p {
   text-align: center;
   margin-top: 15px;
@@ -55,7 +73,14 @@ body {
   text-decoration: none;
 }
 
+.auth-form .back-button {
+  color: #333;
+}
+
 .message {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
   font-weight: bold;
   color: #333;
 }
