@@ -14,27 +14,51 @@
     <input type="password" id="password" placeholder="Password" required />
 
     <button type="submit">Login</button>
+
     <p>Do not have an account? <a href="register.html">Sign Up</a></p>
+
     <p class="message" id="message"></p>
   </form>
 
-  <script src="../js/config.js">
+  <script src="../js/config.js"></script>
+
+  <script>
     document.getElementById("loginForm").addEventListener("submit", async function (event) {
       event.preventDefault();
+
+      const message = document.getElementById("message");
+      message.textContent = "Logging in...";
+      message.style.color = "black";
 
       const data = {
         username: document.getElementById("username").value,
         password: document.getElementById("password").value,
       };
 
-      const response = await fetch(`${API_BASE}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      try {
+        const response = await fetch(`${API_BASE}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
 
-      const result = await response.json();
-      document.getElementById("message").textContent = result.message;
+        const result = await response.json();
+
+        if (response.ok) {
+          message.textContent = result.message || "Login successful!";
+          message.style.color = "green";
+
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1000);
+        } else {
+          message.textContent = result.message || "Login failed. Please try again.";
+          message.style.color = "red";
+        }
+      } catch (error) {
+        message.textContent = "Server error. Please try again later.";
+        message.style.color = "red";
+      }
     });
   </script>
 </body>
