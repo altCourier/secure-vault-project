@@ -102,6 +102,12 @@ app.post("/register", async (req, res) => {
        VALUES (?, ?, 'bcrypt', 0, NOW(), NOW())`,
       [userId, passwordHash]
     );
+    
+    await connection.query(
+      `INSERT INTO Security_State (user_id, consecutive_failures, is_account_frozen)
+      VALUES (?, 0, FALSE)`,
+      [userId]
+    );
 
     await connection.commit();
 
