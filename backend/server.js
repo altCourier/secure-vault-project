@@ -171,6 +171,11 @@ app.post("/login", async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
 
     if (!isPasswordValid) {
+      await pool.query(
+        "INSERT INTO Audit_Log (user_id, action, status, timestamp) VALUES (?, 'login_attempt', 'failure', NOW())",
+        [user.user_id]
+      );
+
       return res.status(401).json({
         message: "Invalid username or password."
       });
@@ -178,6 +183,12 @@ app.post("/login", async (req, res) => {
 
     req.session.userId = user.user_id;
     req.session.username = user.username;
+
+    // ИСПРАВЛЕНИЕ: логируем успешную попытку
+    await pool.query(
+      "INSERT INTO Audit_Log (user_id, action, status, timestamp) VALUES (?, 'login_attempt', 'success', NOW())",
+      [user.user_id]
+    );
 
     return res.status(200).json({
       message: "Password verified. Continue to MFA setup or verification.",
