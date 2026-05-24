@@ -1,32 +1,50 @@
-// if there is not any MFA device, then recovery codes will be used 
+const express = require("express");
+const router = express.Router();
+const db = require("../db");
+const bcrypt = require("bcrypt");
 
-app.post('/verify-recovery', requireAuth, async (req, res) => {
-  const { code } = req.body;
-  const userId = req.session.userId; 
+router.post('/verify-recovery', async (req, res) => {
+    const { recoveryCode } = req.body;
+    const userId = req.session.userId;
 
-  const [rows] = await db.query(
-    `SELECT code_id, code_hash FROM Recovery_Codes
-     WHERE user_id = ? AND is_used = FALSE`,[userId]
-  );
-
-  let matched = null; // we're checking them with the code_hash that are present in the database
-  for (const a of rows) {
-    const ismatch = await bcrypt.compare(code, a.code_hash);
-    if (ismatch) {
-        matched = a; 
+    if (!userId) {
+        return res.status(401).json({ error: 'Unauthorized. Please log in first.' });
     }
-    else{
-        break;
+
+    try {
+        const [codes] = await db.query(
+            `SELECT code_id, code_hash FROM Recovery_Codes WHERE user_id = ? AND is_used = FALSE`,
+            [userId]
+        );
+
+        let validCodeId = null;
+
+        for (const code of codes) {
+            const match = await bcrypt.compare(recoveryCode, code.code_hash);
+            if (match) {
+                validCodeId = code.code_id;
+                break;
+            }
+        }
+
+        if (!validCodeId) {
+            return res.status(400).json({ error: 'Invalid recovery code' });
+        }
+
+        await db.query(
+            `UPDATE Recovery_Codes SET is_used = TRUE, used_at = NOW() WHERE code_id = ?`,
+            [validCodeId]
+        );
+
+        res.json({
+            success: true,
+            message: 'Recovery code verified successfully'
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
     }
-  }
-
-  if (!matched){
-    return res.status(400).json({ error: 'Invalid Recovery Code' });
-  }
-
-  await db.query(
-    `UPDATE Recovery_Codes SET is_used = TRUE, used_at = NOW()
-     WHERE code_id = ?`,[matched.code_id]
-  );
-  res.json({ success: true });
 });
+
+module.exports = router;
