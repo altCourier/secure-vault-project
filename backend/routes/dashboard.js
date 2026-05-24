@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db');
-const session_middleware = require('../middleware/sessionMiddleware');
+const sessionMiddleware = require('../middleware/session_middleware');
 
 // GET /api/session
 
