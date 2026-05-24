@@ -3,11 +3,11 @@ const speakeasy = require("speakeasy");
 const QRCode = require("qrcode");
 
 const db = require("../db");
-const requireAuth = require("../middleware/requireAuth");
+//const requireAuth = require("../middleware/requireAuth");
 
 const router = express.Router();
 
-router.post("/setup-mfa", requireAuth, async (req, res) => {
+router.post("/setup-mfa", async (req, res) => {
   try {
     const userId = req.session.userId;
     const username = req.session.username;
