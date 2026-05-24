@@ -1,15 +1,13 @@
-/* 
-
-The logic of this file should:
-1.  Check if req.session.user_id exists
+/* The logic of this file should:
+1.  Check if req.session.userId exists
 2.  Query user_session to find a session that belongs to that user where
     expires_at is in the future and is_mfa_verified = TRUE
-3.  If nothing is found => respont with 401 unauthorized
+3.  If nothing is found => respond with 401 unauthorized
 4.  If found => call next() to let the request continue
 
 */
 
-const pool = require('./db');
+const pool = require('../db');
 
 // req  := the incoming requests
 // res  := the outgoing requests
@@ -17,23 +15,21 @@ const pool = require('./db');
 const session_middleware = async (req, res, next) => {
 
     try {
-
-        if (req.session.user_id) {
+        // Проверяем userId (с большой буквы, как мы настроили в сессиях)
+        if (req.session.userId) {
 
             const result = await pool.query(
                 'SELECT * FROM User_Session WHERE user_id = ? AND expires_at > NOW() AND is_mfa_verified = TRUE',
-                [req.session.user_id]
+                [req.session.userId]
             );
 
             const rows = result[0];
 
-            if (rows.length === 0) {
-                return res.status(401).json( {error: 'Session not found'} );
+            if (!rows || rows.length === 0) {
+                return res.status(401).json( {error: 'Session not found or MFA not verified'} );
             }
 
             next();
-
-
 
         } else {
             return res.status(401).json( {error: 'Not authenticated'} );
@@ -41,6 +37,7 @@ const session_middleware = async (req, res, next) => {
     }
 
     catch (error) {
+        console.error("Session middleware error:", error);
         return res.status(500).json( {error: 'Server error'} );
     }
 };
