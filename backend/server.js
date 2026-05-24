@@ -37,6 +37,12 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'fallback-secret-key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false }
+}));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
