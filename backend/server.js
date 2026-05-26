@@ -173,7 +173,7 @@ app.post("/login", async (req, res) => {
     if (!isPasswordValid) {
       // ИСПРАВЛЕНИЕ: логируем неудачную попытку
       await pool.query(
-        "INSERT INTO Audit_Log (user_id, action, status, timestamp) VALUES (?, 'login_attempt', 'failure', NOW())",
+        "INSERT INTO Audit_Log (user_id, event_code, status, timestamp) VALUES (?, 'login_attempt', 'failure', NOW())",
         [user.user_id]
       );
 
@@ -186,7 +186,7 @@ app.post("/login", async (req, res) => {
     req.session.username = user.username;
 
     await pool.query(
-      "INSERT INTO Audit_Log (user_id, action, status, timestamp) VALUES (?, 'login_attempt', 'success', NOW())",
+      "INSERT INTO Audit_Log (user_id, event_code, status, timestamp) VALUES (?, 'login_attempt', 'success', NOW())",
       [user.user_id]
     );
 
