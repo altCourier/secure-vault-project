@@ -191,11 +191,18 @@ app.post("/login", async (req, res) => {
       [user.user_id]
     );
 
-    return res.status(200).json({
-      message: "Password verified. Continue to MFA setup or verification.",
-      userId: user.user_id,
-      username: user.username
+    req.session.save((err) => {
+      if (err) {
+        console.error("Session save error:", err);
+        return res.status(500).json({ message: "Session error." });
+      }
+      return res.status(200).json({
+        message: "Password verified. Continue to MFA setup or verification.",
+        userId: user.user_id,
+        username: user.username
+      });
     });
+    
   } catch (error) {
     console.error("Login error:", error);
     return res.status(500).json({
