@@ -36,6 +36,16 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const pool = mysql.createPool({
+  host: process.env.MYSQLHOST,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
+  port: process.env.MYSQLPORT || 3306,
+  waitForConnections: true,
+  connectionLimit: 10,
+});
+
 const MySQLStore = require("express-mysql-session")(session);
 
 const sessionStore = new MySQLStore({}, pool);
@@ -53,16 +63,6 @@ app.use(session({
 }));
 
 app.use(express.static("../frontend"));
-
-const pool = mysql.createPool({
-  host: process.env.MYSQLHOST,
-  user: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
-  port: process.env.MYSQLPORT || 3306,
-  waitForConnections: true,
-  connectionLimit: 10,
-});
 
 // REGISTER ROUTE
 app.post("/register", async (req, res) => {
