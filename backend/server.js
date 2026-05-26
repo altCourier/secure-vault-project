@@ -37,6 +37,12 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'fallback-secret-key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false }
+}));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
@@ -102,6 +108,12 @@ app.post("/register", async (req, res) => {
        VALUES (?, ?, 'bcrypt', 0, NOW(), NOW())`,
       [userId, passwordHash]
     );
+    
+    await connection.query(
+      `INSERT INTO Security_State (user_id, consecutive_failures, is_account_frozen)
+      VALUES (?, 0, FALSE)`,
+      [userId]
+    );
 
     await connection.commit();
 
@@ -165,6 +177,12 @@ app.post("/login", async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
 
     if (!isPasswordValid) {
+      // ИСПРАВЛЕНИЕ: логируем неудачную попытку
+      await pool.query(
+        "INSERT INTO Audit_Log (user_id, action, status, timestamp) VALUES (?, 'login_attempt', 'failure', NOW())",
+        [user.user_id]
+      );
+
       return res.status(401).json({
         message: "Invalid username or password."
       });
@@ -172,6 +190,11 @@ app.post("/login", async (req, res) => {
 
     req.session.userId = user.user_id;
     req.session.username = user.username;
+
+    await pool.query(
+      "INSERT INTO Audit_Log (user_id, action, status, timestamp) VALUES (?, 'login_attempt', 'success', NOW())",
+      [user.user_id]
+    );
 
     return res.status(200).json({
       message: "Password verified. Continue to MFA setup or verification.",
@@ -185,6 +208,7 @@ app.post("/login", async (req, res) => {
     });
   }
 });
+
 
 // ROUTES FROM SEPARATE FILES
 app.use(setupMfaRoutes);
