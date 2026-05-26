@@ -1,6 +1,4 @@
 // Developer 1: Front Door (Registration & Login)
-// Backend API using Node.js, Express, MySQL, and bcrypt
-// Developer 1: Front Door (Registration & Login)
 // Backend API using Node.js, Express, MySQL, bcrypt, sessions, and routes
 
 const express = require("express");
@@ -30,7 +28,6 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
-
     return callback(new Error("Not allowed by CORS"));
   },
   credentials: true
@@ -44,8 +41,9 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false,
-    httpOnly: true
+    secure: true,
+    httpOnly: true,
+    sameSite: "none"
   }
 }));
 
@@ -102,10 +100,10 @@ app.post("/register", async (req, res) => {
        VALUES (?, ?, 'bcrypt', 0, NOW(), NOW())`,
       [userId, passwordHash]
     );
-    
+
     await connection.query(
       `INSERT INTO Security_State (user_id, consecutive_failures, is_account_frozen)
-      VALUES (?, 0, FALSE)`,
+       VALUES (?, 0, FALSE)`,
       [userId]
     );
 
@@ -171,12 +169,10 @@ app.post("/login", async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
 
     if (!isPasswordValid) {
-      // ИСПРАВЛЕНИЕ: логируем неудачную попытку
       await pool.query(
         "INSERT INTO Audit_Log (user_id, event_code, status, timestamp) VALUES (?, 'login_attempt', 'failure', NOW())",
         [user.user_id]
       );
-
       return res.status(401).json({
         message: "Invalid username or password."
       });
@@ -203,7 +199,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-
 // ROUTES FROM SEPARATE FILES
 app.use(setupMfaRoutes);
 app.use(verifyMfaRoutes);
@@ -215,5 +210,3 @@ const BACKEND_URL = process.env.BACKEND_URL || `http://localhost:${PORT}`;
 app.listen(PORT, () => {
   console.log(`Server is running on ${BACKEND_URL}`);
 });
-
-
