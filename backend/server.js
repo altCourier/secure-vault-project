@@ -36,10 +36,15 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const MySQLStore = require("express-mysql-session")(session);
+
+const sessionStore = new MySQLStore({}, pool);
+
 app.use(session({
   secret: process.env.SESSION_SECRET || "secure-vault-secret",
   resave: false,
   saveUninitialized: false,
+  store: sessionStore,
   cookie: {
     secure: true,
     httpOnly: true,
