@@ -1,6 +1,6 @@
 
---1)Users table
---All other tables reference this table.
+-- 1)Users table
+-- All other tables reference this table.
 CREATE TABLE IF NOT EXISTS Users (
     user_id        INT          PRIMARY KEY AUTO_INCREMENT,
     username       VARCHAR(50)  NOT NULL UNIQUE,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS Users (
     last_login_at  DATETIME     NULL
 );
 
---2) Credentials table
+-- 2) Credentials table
 CREATE TABLE IF NOT EXISTS Credentials (
     credential_id        INT          PRIMARY KEY AUTO_INCREMENT,
     user_id              INT          NOT NULL UNIQUE,
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS Credentials (
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
---3) MFA_Methods table
+-- 3) MFA_Methods table
 CREATE TABLE IF NOT EXISTS MFA_Methods (
     method_id   INT          PRIMARY KEY AUTO_INCREMENT,
     method_name VARCHAR(50)  NOT NULL UNIQUE,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS MFA_Methods (
     created_at  DATETIME     NOT NULL DEFAULT NOW()
 );
 
---Seeding the supported MFA types so INSERT queries in mfa_queries.sql
+-- Seeding the supported MFA types so INSERT queries in mfa_queries.sql
 INSERT IGNORE INTO MFA_Methods (method_name, description, is_active)
 VALUES
     ('TOTP',        'Time-based One-Time Password (e.g. Google Authenticator)', TRUE),
@@ -44,7 +44,7 @@ VALUES
     ('EMAIL',       'One-time code delivered via e-mail',                       TRUE),
     ('BACKUP_CODE', 'Single-use emergency recovery code',                       TRUE);
 
---4) User_MFA_Factors
+-- 4) User_MFA_Factors
 CREATE TABLE IF NOT EXISTS User_MFA_Factors (
     factor_id   INT          PRIMARY KEY AUTO_INCREMENT,
     user_id     INT          NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS User_MFA_Factors (
     FOREIGN KEY (method_id) REFERENCES MFA_Methods(method_id) ON DELETE RESTRICT
 );
 
---5) Recovery_Codes
+-- 5) Recovery_Codes
 CREATE TABLE IF NOT EXISTS Recovery_Codes (
     code_id    INT          PRIMARY KEY AUTO_INCREMENT,
     user_id    INT          NOT NULL,
