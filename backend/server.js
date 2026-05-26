@@ -208,7 +208,7 @@ app.post("/login", async (req, res) => {
 app.use(setupMfaRoutes);
 app.use(verifyMfaRoutes);
 app.use(verifyRecoveryRoutes);
-app.use(dashboardRoutes);
+app.use("/api", dashboardRoutes);
 
 const BACKEND_URL = process.env.BACKEND_URL || `http://localhost:${PORT}`;
 
