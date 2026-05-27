@@ -191,15 +191,21 @@ app.post("/login", async (req, res) => {
       [user.user_id]
     );
 
+    const [mfaRows] = await pool.query(
+      "SELECT * FROM User_MFA_Factors WHERE user_id = ? AND is_enabled = TRUE LIMIT 1",
+      [user.user_id]
+    );
+
     req.session.save((err) => {
       if (err) {
         console.error("Session save error:", err);
         return res.status(500).json({ message: "Session error." });
       }
       return res.status(200).json({
-        message: "Password verified. Continue to MFA setup or verification.",
+        message: "Password verified.",
         userId: user.user_id,
-        username: user.username
+        username: user.username,
+        mfaSetup: mfaRows.length > 0
       });
     });
     
