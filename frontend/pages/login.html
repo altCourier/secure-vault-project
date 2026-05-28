@@ -52,7 +52,11 @@
           message.style.color = "green";
 
           setTimeout(() => {
-            window.location.href = "dashboard.html";
+            if (result.mfaSetup) {
+              window.location.href = "verify-mfa.html";
+            } else {
+              window.location.href = "setup-mfa.html";
+            }
           }, 1000);
         } else {
           message.textContent = result.message || "Login failed. Please try again.";
