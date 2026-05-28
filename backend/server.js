@@ -14,6 +14,8 @@ const verifyRecoveryRoutes = require("./routes/verfiy_recovery");
 const dashboardRoutes = require("./routes/dashboard");
 
 const app = express();
+app.set("trust proxy", 1);
+
 const PORT = process.env.PORT || 3000;
 const SALT_ROUNDS = 10;
 
@@ -58,7 +60,8 @@ app.use(session({
   cookie: {
     secure: true,
     httpOnly: true,
-    sameSite: "none"
+    sameSite: "none",
+    maxAge: 24 * 60 * 60 * 1000
   }
 }));
 
