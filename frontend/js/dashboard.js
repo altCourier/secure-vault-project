@@ -26,7 +26,8 @@
   };
 
   // ── Redirect targets ───────────────────────────────────────────────────────
-  const LOGIN_PAGE = "/index.html";   // adjust if your login route differs
+
+  const LOGIN_PAGE = "login.html";   // adjust if your login route differs
 
   // ── Human-readable labels for event_type codes ────────────────────────────
   const EVENT_TYPE_LABELS = {
