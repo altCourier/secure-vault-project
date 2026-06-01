@@ -9,10 +9,10 @@ router.post('/verify-mfa', async (req, res) => {
     const userId = req.session.userId;
 
     const [rows] = await db.query(
-        `SELECT factor_id, AES_DECRYPT(secret_data, ?) as secret
-        FROM User_MFA_Factors
-        WHERE user_id = ? AND is_enabled = FALSE`, [process.env.AES_KEY, userId]
-    ); // we're creating a list for taking the encrypted password and we solve it
+    `SELECT factor_id, AES_DECRYPT(secret_data, ?) as secret
+    FROM User_MFA_Factors
+    WHERE user_id = ? AND is_enabled = TRUE`, [process.env.AES_KEY, userId]
+    );
 
     if (!rows.length) { // if there is nothing in the rows, then return an error
         return res.status(404).json({ error: 'Couldn\'t find any MFA record' });
