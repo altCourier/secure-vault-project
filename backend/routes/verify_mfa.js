@@ -18,7 +18,12 @@ router.post('/verify-mfa', async (req, res) => {
         return res.status(404).json({ error: 'Couldn\'t find any MFA record' });
     }
 
+    if (!rows[0].secret) {
+        return res.status(500).json({ error: 'Failed to decrypt MFA secret' });
+    }
+
     const secret = rows[0].secret.toString();
+    
     const factorId = rows[0].factor_id; 
 
     const verified = speakeasy.totp.verify({ // we should verify the totp code with verify function
