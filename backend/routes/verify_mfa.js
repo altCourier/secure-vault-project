@@ -23,6 +23,8 @@ router.post('/verify-mfa', async (req, res) => {
     }
 
     const secret = Buffer.from(rows[0].secret).toString('utf8');
+    console.log("Decrypted secret:", secret);
+    console.log("Token received:", token);
 
     const factorId = rows[0].factor_id; 
 
