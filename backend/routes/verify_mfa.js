@@ -5,16 +5,18 @@ const speakeasy = require("speakeasy");
 const bcrypt = require("bcrypt");
 
 router.post('/verify-mfa', async (req, res) => {
-    const { token } = req.body; // token is the 6-digit code that the user has entered
+    const { token } = req.body;
     const userId = req.session.userId;
 
-    const [rows] = await db.query(
-    `SELECT factor_id, AES_DECRYPT(secret_data, ?) as secret
-    FROM User_MFA_Factors
-    WHERE user_id = ? AND is_enabled = TRUE`, [process.env.AES_KEY, userId]
+    // Check for unverified record first (setup flow)
+    let [rows] = await db.query(
+        `SELECT factor_id, AES_DECRYPT(secret_data, ?) as secret, is_enabled
+        FROM User_MFA_Factors
+        WHERE user_id = ?
+        ORDER BY created_at DESC LIMIT 1`, [process.env.AES_KEY, userId]
     );
 
-    if (!rows.length) { // if there is nothing in the rows, then return an error
+    if (!rows.length) {
         return res.status(404).json({ error: 'Couldn\'t find any MFA record' });
     }
 
@@ -23,12 +25,10 @@ router.post('/verify-mfa', async (req, res) => {
     }
 
     const secret = Buffer.from(rows[0].secret).toString('utf8');
-    console.log("Decrypted secret:", secret);
-    console.log("Token received:", token);
+    const factorId = rows[0].factor_id;
+    const isSetupFlow = rows[0].is_enabled === 0;
 
-    const factorId = rows[0].factor_id; 
-
-    const verified = speakeasy.totp.verify({ // we should verify the totp code with verify function
+    const verified = speakeasy.totp.verify({
         secret,
         encoding: 'base32',
         token,
@@ -39,27 +39,29 @@ router.post('/verify-mfa', async (req, res) => {
         return res.status(400).json({ error: 'Invalid Code' });
     }
 
-    await db.query(
-        `UPDATE User_MFA_Factors
-        SET is_enabled = TRUE, verified_at = NOW()
-        WHERE factor_id = ?`, [factorId]
-    ); // we have activated the mfa factor if verified is True.
-
-    const codes = [];
-    for (let i = 0; i < 10; i++) {
-        const rawcode = Math.random().toString(36).substring(2, 10).toUpperCase();
-        const hashed = await bcrypt.hash(rawcode, 10);
+    // Setup flow — activate MFA and return recovery codes
+    if (isSetupFlow) {
         await db.query(
-            `INSERT INTO Recovery_Codes(user_id,code_hash,is_used,created_at)
-            VALUES(?,?,FALSE,NOW())`, [userId, hashed]
+            `UPDATE User_MFA_Factors SET is_enabled = TRUE, verified_at = NOW() WHERE factor_id = ?`,
+            [factorId]
         );
-        codes.push(rawcode);
+
+        const codes = [];
+        for (let i = 0; i < 10; i++) {
+            const rawcode = Math.random().toString(36).substring(2, 10).toUpperCase();
+            const hashed = await bcrypt.hash(rawcode, 10);
+            await db.query(
+                `INSERT INTO Recovery_Codes(user_id, code_hash, is_used, created_at) VALUES(?, ?, FALSE, NOW())`,
+                [userId, hashed]
+            );
+            codes.push(rawcode);
+        }
+
+        return res.json({ success: true, recoveryCodes: codes });
     }
 
-    res.json({
-        success: true,
-        recoveryCodes: codes
-    });
+    // Login flow — just confirm verification
+    return res.json({ success: true });
 });
 
 module.exports = router;
