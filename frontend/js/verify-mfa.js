@@ -64,12 +64,16 @@
       const recoveryBox  = document.getElementById("recovery-box");
       const codesList    = document.getElementById("recovery-codes-list");
 
-      // Build the list items
-      codesList.innerHTML = data.recoveryCodes
-        .map(code => `<li>${code}</li>`)
-        .join("");
-
-      recoveryBox.style.display = "block";
+      if (data.recoveryCodes && data.recoveryCodes.length) {
+        // Setup flow — show recovery codes
+        codesList.innerHTML = data.recoveryCodes
+          .map(code => `<li>${code}</li>`)
+          .join("");
+        recoveryBox.style.display = "block";
+      } else {
+        // Login flow — go straight to dashboard
+        window.location.href = "dashboard.html";
+      }
 
     } catch (err) {
       msgEl.style.color = "red";
