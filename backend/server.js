@@ -178,8 +178,8 @@ app.post("/login", async (req, res) => {
 
     if (!isPasswordValid) {
       await pool.query(
-        "INSERT INTO Audit_Log (user_id, event_code, status, timestamp) VALUES (?, 'login_attempt', 'failure', NOW())",
-        [user.user_id]
+        "INSERT INTO Audit_Log (user_id, event_code, status, ip_address, user_agent, timestamp) VALUES (?, 'login_attempt', 'failure', ?, ?, NOW())",
+        [user.user_id, req.ip, req.headers['user-agent']]
       );
       return res.status(401).json({
         message: "Invalid username or password."
@@ -190,8 +190,8 @@ app.post("/login", async (req, res) => {
     req.session.username = user.username;
 
     await pool.query(
-      "INSERT INTO Audit_Log (user_id, event_code, status, timestamp) VALUES (?, 'login_attempt', 'success', NOW())",
-      [user.user_id]
+      "INSERT INTO Audit_Log (user_id, event_code, status, ip_address, user_agent, timestamp) VALUES (?, 'login_attempt', 'success', ?, ?, NOW())",
+      [user.user_id, req.ip, req.headers['user-agent']]
     );
 
     const [mfaRows] = await pool.query(
